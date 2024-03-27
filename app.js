@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 // MongoDB connection using environment variables
 const mongoURI = process.env.MONGO_URI; // Use environment variable for MongoDB URI
 
-mongoose.connect(MONGO_URI, {
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     connectTimeoutMS: 60000, // Increase connection timeout to 60 seconds
