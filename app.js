@@ -11,7 +11,9 @@ const app = express();
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://yaseenfiroz:tumkur45@cluster0.nnqznxh.mongodb.net/cricket-be', {
+const mongoURI = process.env.MONGO_URI; // Use environment variable for MongoDB URI
+
+mongoose.connect(mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
