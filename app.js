@@ -11,7 +11,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // MongoDB connection
-mongoose.connect('mongodb+srv://yaseenfiroz:tumkur45@cluster0.nnqznxh.mongodb.net/', {
+mongoose.connect('mongodb://admin:8hUF4DSy7k2bvDnD@SG-yaseenfiroz-61957.servers.mongodirector.com:27017/admin', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
