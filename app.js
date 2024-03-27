@@ -1,3 +1,5 @@
+// app.js
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -8,16 +10,13 @@ const app = express();
 // Body parser middleware
 app.use(bodyParser.json());
 
-// MongoDB connection using environment variables
-const mongoURI = process.env.MONGO_URI; // Use environment variable for MongoDB URI
-
-mongoose.connect(mongoURI, {
+// MongoDB connection
+mongoose.connect('mongodb://admin:8hUF4DSy7k2bvDnD@SG-yaseenfiroz-61957.servers.mongodirector.com:27017/admin', {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-    connectTimeoutMS: 60000, // Increase connection timeout to 60 seconds
-  })
+    useUnifiedTopology: true
+})
 .then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+.catch(err => console.log(err));
 
 // Routes
 app.use('/api/forms', formRoutes);
