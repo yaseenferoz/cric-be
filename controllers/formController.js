@@ -1,14 +1,37 @@
-// backend/controllers/formController.js
-
+const AWS = require('aws-sdk'); // Import AWS SDK
 const Form = require('../models/Form'); // Assuming you have a Form model defined
-
 // Submit form
 const submitForm = async (req, res) => {
     try {
-        // Create a new form instance based on the request body
-        const newForm = new Form(req.body);
+        console.log('Received form submission request');
+        const photo = req.file; // Assuming you're using multer or similar middleware for file uploads
+        console.log('Received photo:', photo);
+
+        // Log the content of photo.buffer
+        console.log('Photo buffer content:', photo.buffer);
+
+        // AWS S3 upload parameters
+        const uploadParams = {
+            Bucket: 'cricbe',
+            Key: photo.originalname,
+            Body: photo.buffer // Assuming photo is received as buffer
+        };
+
+        // Create S3 object
+        const s3 = new AWS.S3();
+
+        // Upload photo to S3
+        const uploadResult = await s3.upload(uploadParams).promise();
+
+        // Save photo URL to database
+        const newForm = new Form({
+            ...req.body,
+            photo: uploadResult.Location // Save S3 object URL to photo field in the form
+        });
+
         // Save the form to the database
         await newForm.save();
+
         // Send success response
         res.status(201).json({ message: 'Form submitted successfully' });
     } catch (error) {
@@ -18,10 +41,13 @@ const submitForm = async (req, res) => {
         } else if (error.code === 11000 && error.keyPattern && error.keyPattern.phone && error.keyPattern.phone === 1) {
             return res.status(400).json({ error: 'Phone number is already in use' });
         }
+        console.error('Error occurred while submitting form:', error);
         // If it's another error, send a generic error response
         res.status(500).json({ error: 'An error occurred while submitting the form' });
     }
 };
+
+
 
 // Get all forms
 const getAllForms = async (req, res) => {
