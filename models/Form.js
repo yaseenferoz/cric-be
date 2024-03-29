@@ -7,15 +7,6 @@ const formSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    age: {
-        type: Number,
-        required: false
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true // Ensure unique email addresses
-    },
     phone: {
         type: String,
         required: true,
@@ -27,7 +18,7 @@ const formSchema = new mongoose.Schema({
     },
     playerType: {
         type: String,
-        enum: ['Batsman', 'Bowler', 'All-Rounder', 'Wicketkeeper'], // Assuming player types are predefined
+        enum: ['Batsman', 'Bowler', 'All-Rounder'], // Assuming player types are predefined
         required: true
     },
     photo: String // Assuming photo upload is optional

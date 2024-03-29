@@ -23,6 +23,13 @@ const submitForm = async (req, res) => {
         // Upload photo to S3
         const uploadResult = await s3.upload(uploadParams).promise();
 
+        // Check if email or phone number already exists
+        const existingForm = await Form.findOne({ $or: [{ phone: req.body.phone }] });
+        if (existingForm) {
+            const duplicateField = existingForm.phone === req.body.phone ? 'phone' : 'phone';
+            return res.status(400).json({ error: `${duplicateField} is already in use` });
+        }
+
         // Save photo URL to database
         const newForm = new Form({
             ...req.body,
@@ -35,18 +42,11 @@ const submitForm = async (req, res) => {
         // Send success response
         res.status(201).json({ message: 'Form submitted successfully' });
     } catch (error) {
-        // Check if the error is due to a duplicate key violation
-        if (error.code === 11000 && error.keyPattern && error.keyPattern.email && error.keyPattern.email === 1) {
-            return res.status(400).json({ error: 'Email address is already in use' });
-        } else if (error.code === 11000 && error.keyPattern && error.keyPattern.phone && error.keyPattern.phone === 1) {
-            return res.status(400).json({ error: 'Phone number is already in use' });
-        }
         console.error('Error occurred while submitting form:', error);
         // If it's another error, send a generic error response
         res.status(500).json({ error: 'An error occurred while submitting the form' });
     }
 };
-
 
 
 // Get all forms
