@@ -10,7 +10,6 @@ const formSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
-        unique: true // Ensure unique phone numbers
     },
     villageName: {
         type: String,
